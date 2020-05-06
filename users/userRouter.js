@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-
+const db = require("./userDb")
 router.post('/', (req, res) => {
   // do your magic!
 });
@@ -11,11 +11,23 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  // do your magic!
+  db.get()
+  .then(result => {
+    res.status(200).json(result)
+  })
+  .catch(err => {
+    res.status(500).json({error: "error connecting to database"})
+  })
 });
 
 router.get('/:id', (req, res) => {
-  // do your magic!
+  db.getById(Number(req.params.id))
+  .then(result => {
+    res.status(200).json(result)
+  })
+  .catch(err => {
+    res.status(500).json({error: "error connecting to database"})
+  })
 });
 
 router.get('/:id/posts', (req, res) => {
@@ -33,7 +45,14 @@ router.put('/:id', (req, res) => {
 //custom middleware
 
 function validateUserId(req, res, next) {
-  // do your magic!
+  db.getById(Number(req.params.id))
+  .then(result => {
+  req.user = result
+  next();
+  })
+  .catch(err => {
+    res.status(400).json({ message: "invalid user id" })
+  })
 }
 
 function validateUser(req, res, next) {

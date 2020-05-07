@@ -14,11 +14,11 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id',validatePostId, (req, res) => {
   res.status(200).json(req.post)
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validatePostId, (req, res) => {
   db.remove(Number(req.params.id))
   .then(result => {
     if (result === 1) {
@@ -49,7 +49,7 @@ router.put('/:id', validatePostId, (req, res) => {
 // custom middleware
 
 function validatePostId(req, res, next) {
-  db.getById(req.id)
+  db.getById(req.params.id)
   .then((result) => {
     if (result) {
       req.post = result;

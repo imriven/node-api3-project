@@ -33,6 +33,7 @@ router.delete('/:id', validatePostId, (req, res) => {
 });
 
 router.put('/:id', validatePostId, (req, res) => {
+  const post = 
   db.update(Number(req.params.id), req.body)
   .then(result => {
     if (result === 1) {
